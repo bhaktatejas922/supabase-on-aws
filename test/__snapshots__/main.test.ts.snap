@@ -1003,7 +1003,7 @@ Object {
       "Type": "String",
     },
     "StudioBranch": Object {
-      "Default": "v0.23.09",
+      "Default": "v0.23.11",
       "Description": "Branch or tag - https://github.com/supabase/supabase/tags",
       "Type": "String",
     },

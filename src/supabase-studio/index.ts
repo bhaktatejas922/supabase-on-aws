@@ -62,7 +62,7 @@ export class SupabaseStudio extends Construct {
     const buildSpec = BuildSpec.fromObjectToYaml({
       version: 1,
       applications: [{
-        appRoot,
+        appRoot: 'apps/studio',
         frontend: {
           phases: {
             preBuild: {
@@ -73,7 +73,7 @@ export class SupabaseStudio extends Construct {
                 'env | grep -e STUDIO_PG_META_URL >> .env.production',
                 'env | grep -e SUPABASE_ >> .env.production',
                 'env | grep -e NEXT_PUBLIC_ >> .env.production',
-                'cd ../',
+                'cd ../../',
                 'npx turbo@1.10.3 prune --scope=studio',
                 'npm clean-install',
               ],
@@ -86,14 +86,13 @@ export class SupabaseStudio extends Construct {
             },
             postBuild: {
               commands: [
-                `cd ${appRoot}`,
-                `rsync -av --ignore-existing .next/standalone/${repository.repositoryName}/${appRoot}/ .next/standalone/`,
-                `rsync -av --ignore-existing .next/standalone/${repository.repositoryName}/node_modules/ .next/standalone/node_modules/`,
-                `rm -rf .next/standalone/${repository.repositoryName}`,
+                'cd apps/studio',
+                'rsync -av --ignore-existing .next/standalone/apps/studio/ .next/standalone',
+                'rsync -av --ignore-existing .next/standalone/node_modules/ .next/standalone/node_modules',
+                'rm -rf .next/standalone/apps',
                 'cp .env .env.production .next/standalone/',
-                // https://nextjs.org/docs/advanced-features/output-file-tracing#automatically-copying-traced-files
-                'rsync -av --ignore-existing public/ .next/standalone/public/',
-                'rsync -av --ignore-existing .next/static/ .next/standalone/.next/static/',
+                'rsync -av --ignore-existing public/ .next/standalone/public',
+                'rsync -av --ignore-existing .next/static/ .next/standalone/.next/static',
               ],
             },
           },
